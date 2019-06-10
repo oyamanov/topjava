@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,7 +17,11 @@ import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
     public static final int CALORIES_PER_DAY = 2000; // TODO: refactor later
-    public static List<Meal> meals = getHardcodedMeals();
+    public static Map<Long, Meal> mealsMap;
+
+    static {
+        mealsMap = getHardcodedMeals().stream().collect(Collectors.toConcurrentMap(Meal::getId, meal -> meal));
+    }
 
     public static void main(String[] args) {
         List<Meal> meals = Arrays.asList(
@@ -58,28 +61,16 @@ public class MealsUtil {
                 new Meal(17, LocalDateTime.of(2019, Month.JUNE, 6, 15, 0), "Обед", 1000),
                 new Meal(18, LocalDateTime.of(2019, Month.JUNE, 6, 20, 0), "Ужин", 500)
         ); // Creates a fixed-size ArrayList, which is not mutable
-        return new CopyOnWriteArrayList<>(mealList);
+        return new ArrayList<>(mealList);
     }
 
     public static List<MealTo> mealsToMealTo(List<Meal> meals, int caloriesPerDay) {
-        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
-                .collect(Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
-
-        return meals.stream()
-                .map(meal -> createWithExcess(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay)).collect(Collectors.toList());
-    }
-
-    public static long getNextId(List<Meal> meals) {
-        OptionalLong currentMaxId = meals.stream().mapToLong(Meal::getId).max();
-        return currentMaxId.getAsLong() + 1;
+        return getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
 
     public static List<MealTo> getFilteredWithExcess(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
-                .collect(
-                        Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
-//                      Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum)
-                );
+                .collect(Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
 
         return meals.stream()
                 .filter(meal -> TimeUtil.isBetween(meal.getTime(), startTime, endTime))
