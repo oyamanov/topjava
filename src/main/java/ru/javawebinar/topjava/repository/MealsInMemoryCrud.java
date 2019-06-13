@@ -10,14 +10,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class MealsInMemoryCrud implements MealsInMemoryCrudInterface {
-    private static AtomicLong idCounter = new AtomicLong(1);
+public class MealsInMemoryCrud implements MealsCrudInterface {
+    private AtomicLong idCounter = new AtomicLong(1);
 
-    private static Map<Long, Meal> mealsMap = new ConcurrentHashMap<>();
+    private Map<Long, Meal> mealsMap = new ConcurrentHashMap<>();
 
-    static {
-        MealsInMemoryCrud mealsCrud = new MealsInMemoryCrud();
-        mealsCrud.initTestData();
+    public MealsInMemoryCrud() {
+        initTestData();
     }
 
     private void initTestData() {

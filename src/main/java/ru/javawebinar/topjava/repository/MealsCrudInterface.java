@@ -4,7 +4,7 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.List;
 
-public interface MealsInMemoryCrudInterface {
+public interface MealsCrudInterface {
     Meal findById(long id);
 
     List<Meal> findAll();

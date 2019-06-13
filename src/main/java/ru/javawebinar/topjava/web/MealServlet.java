@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.repository.MealsInMemoryCrud;
-import ru.javawebinar.topjava.repository.MealsInMemoryCrudInterface;
+import ru.javawebinar.topjava.repository.MealsCrudInterface;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.TimeUtil;
 
@@ -22,7 +22,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
-    private MealsInMemoryCrudInterface mealsCrud = new MealsInMemoryCrud();
+    private MealsCrudInterface mealsCrud = new MealsInMemoryCrud();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -45,14 +45,14 @@ public class MealServlet extends HttpServlet {
         long mealId;
         switch (actionParam) {
             case "add":
-                request.setAttribute("isEdit", false);
+                Meal emptyMeal = new Meal(0, null, "", 0);
+                request.setAttribute("meal", emptyMeal);
                 request.getRequestDispatcher("/add-edit-meal.jsp").forward(request, response);
                 break;
             case "edit":
                 mealId = Long.parseLong(idParam);
                 Meal meal = mealsCrud.findById(mealId);
-                request.setAttribute("mealTo", meal);
-                request.setAttribute("isEdit", true);
+                request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/add-edit-meal.jsp").forward(request, response);
                 break;
             case "delete":

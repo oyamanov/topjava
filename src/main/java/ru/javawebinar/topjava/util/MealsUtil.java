@@ -26,30 +26,6 @@ public class MealsUtil {
         mealsWithExcess.forEach(System.out::println);
     }
 
-    public static List<Meal> getHardcodedMeals() {
-        List<Meal> mealList = Arrays.asList(
-                new Meal(1, LocalDateTime.of(2019, Month.JUNE, 1, 10, 0), "Завтрак", 500),
-                new Meal(2, LocalDateTime.of(2019, Month.JUNE, 1, 15, 0), "Обед", 1000),
-                new Meal(3, LocalDateTime.of(2019, Month.JUNE, 1, 20, 0), "Ужин", 500),
-                new Meal(4, LocalDateTime.of(2019, Month.JUNE, 2, 10, 0), "Завтрак", 510),
-                new Meal(5, LocalDateTime.of(2019, Month.JUNE, 2, 15, 0), "Обед", 1000),
-                new Meal(6, LocalDateTime.of(2019, Month.JUNE, 2, 20, 0), "Ужин", 500),
-                new Meal(7, LocalDateTime.of(2019, Month.JUNE, 3, 10, 0), "Завтрак", 500),
-                new Meal(8, LocalDateTime.of(2019, Month.JUNE, 3, 15, 0), "Обед", 1000),
-                new Meal(9, LocalDateTime.of(2019, Month.JUNE, 3, 20, 0), "Ужин", 500),
-                new Meal(10, LocalDateTime.of(2019, Month.JUNE, 4, 10, 0), "Завтрак", 510),
-                new Meal(11, LocalDateTime.of(2019, Month.JUNE, 4, 15, 0), "Обед", 1000),
-                new Meal(12, LocalDateTime.of(2019, Month.JUNE, 4, 20, 0), "Ужин", 500),
-                new Meal(13, LocalDateTime.of(2019, Month.JUNE, 5, 10, 0), "Завтрак", 500),
-                new Meal(14, LocalDateTime.of(2019, Month.JUNE, 5, 15, 0), "Обед", 1000),
-                new Meal(15, LocalDateTime.of(2019, Month.JUNE, 5, 20, 0), "Ужин", 500),
-                new Meal(16, LocalDateTime.of(2019, Month.JUNE, 6, 10, 0), "Завтрак", 510),
-                new Meal(17, LocalDateTime.of(2019, Month.JUNE, 6, 15, 0), "Обед", 1000),
-                new Meal(18, LocalDateTime.of(2019, Month.JUNE, 6, 20, 0), "Ужин", 500)
-        ); // Creates a fixed-size ArrayList, which is not mutable
-        return new ArrayList<>(mealList);
-    }
-
     public static List<MealTo> mealsToMealTo(List<Meal> meals, int caloriesPerDay) {
         return getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
