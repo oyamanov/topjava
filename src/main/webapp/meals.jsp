@@ -14,6 +14,19 @@
         .excess {
             color: red;
         }
+
+        table {
+            margin: 0 auto;
+            border: solid 1px;
+        }
+
+        #addMealDiv {
+            text-align: center;
+        }
+
+        .spacer {
+            width: 150px;
+        }
     </style>
 </head>
 <body>
@@ -21,9 +34,39 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
-    <a href="meals?action=create">Add Meal</a>
+
+    <form method="POST" action="meals">
+        <input type="hidden" name="action" value="filter">
+        <table>
+            <tr>
+                <td><label for="fromDate">От даты</label></td>
+                <td><label for="toDate">До даты</label></td>
+                <td class="spacer"></td>
+                <td><label for="fromTime">От времени</label></td>
+                <td><label for="toTime">До времени</label></td>
+            </tr>
+            <tr>
+                <td><input type="date" id="fromDate" name="fromDate"></td>
+                <td><input type="date" id="toDate" name="toDate"></td>
+                <td class="spacer"></td>
+                <td><input type="time" id="fromTime" name="fromTime"></td>
+                <td><input type="time" id="toTime" name="toTime"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button type="button" onclick="window.location='meals';">Отменить</button></td>
+                <td><button type="submit">Отфильтровать</button></td>
+            </tr>
+        </table>
+    </form>
+    <br>
+    <br>
+
+    <div id="addMealDiv"><a href="meals?action=create">Add Meal</a></div>
     <br><br>
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table id="mealTable" border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
             <th>Date</th>
@@ -34,12 +77,9 @@
         </tr>
         </thead>
         <c:forEach items="${meals}" var="meal">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
             <tr class="${meal.excess ? 'excess' : 'normal'}">
                 <td>
-                        <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
-                        <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
-                        <%--${fn:replace(meal.dateTime, 'T', ' ')}--%>
                         ${fn:formatDateTime(meal.dateTime)}
                 </td>
                 <td>${meal.description}</td>
