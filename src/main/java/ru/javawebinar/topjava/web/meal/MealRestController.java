@@ -19,46 +19,44 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 public class MealRestController {
     private static final Logger log = getLogger(MealRestController.class);
 
-    @Autowired
     private MealService service;
 
-    public List<Meal> getAllMealsByUserId(int userId) {
-        log.info("getAllMealsByUserId {}", userId);
-        if (userId != SecurityUtil.getAuthUserId())
-            return null;
-
-        return service.getAllByUserId(userId);
+    @Autowired
+    public MealRestController(MealService service) {
+        this.service = service;
     }
 
-    public List<MealTo> getAllByUserId(int userId) {
-        log.info("getAllByUserId {}", userId);
-        if (userId != SecurityUtil.getAuthUserId())
-            return null;
+    public List<Meal> getAllMeals() {
+        log.info("getAllMeals");
+        return service.getAllByUserId(SecurityUtil.getAuthUserId());
+    }
 
-        List<Meal> userMeals = service.getAllByUserId(userId);
+    public List<MealTo> getAll() {
+        log.info("getAll");
+        List<Meal> userMeals = service.getAllByUserId(SecurityUtil.getAuthUserId());
         return MealsUtil.getWithExcess(userMeals, MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
     public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id);
+        return service.get(id, SecurityUtil.getAuthUserId());
     }
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
-        return service.create(meal);
+        return service.create(meal, SecurityUtil.getAuthUserId());
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id);
+        service.delete(id, SecurityUtil.getAuthUserId());
     }
 
     public void update(Meal meal, int id) {
         log.info("update {} with id={}", meal, id);
         assureIdConsistent(meal, id);
-        service.update(meal);
+        service.update(meal, SecurityUtil.getAuthUserId());
     }
 
 }

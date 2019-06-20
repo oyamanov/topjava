@@ -47,7 +47,7 @@ public class MealServlet extends HttpServlet {
             if (fromDateParam != null && !fromDateParam.isEmpty() && toDateParam != null && !toDateParam.isEmpty()) {
                 LocalDate fromDate = LocalDate.parse(fromDateParam);
                 LocalDate toDate = LocalDate.parse(toDateParam);
-                List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(mealController.getAllMealsByUserId(SecurityUtil.getAuthUserId()),
+                List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(mealController.getAllMeals(),
                         MealsUtil.DEFAULT_CALORIES_PER_DAY,
                         fromDate,
                         toDate);
@@ -56,7 +56,7 @@ public class MealServlet extends HttpServlet {
             } else if (fromTimeParam != null && !fromTimeParam.isEmpty() && toTimeParam != null && !toTimeParam.isEmpty()) {
                 LocalTime fromTime = LocalTime.parse(fromTimeParam);
                 LocalTime toTime = LocalTime.parse(toTimeParam);
-                List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(mealController.getAllMealsByUserId(SecurityUtil.getAuthUserId()),
+                List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(mealController.getAllMeals(),
                         MealsUtil.DEFAULT_CALORIES_PER_DAY,
                         fromTime,
                         toTime);
@@ -104,7 +104,7 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals", mealController.getAllByUserId(SecurityUtil.getAuthUserId()));
+                request.setAttribute("meals", mealController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.AbstractNamedEntity;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
@@ -45,13 +46,18 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
         log.info("InMemoryUserRepositoryImpl getAll");
-        return new ArrayList<>(repository.values());
+        return repository.values().stream()
+                .sorted(Comparator.comparing(AbstractNamedEntity::getName))
+                .collect(Collectors.toList());
     }
 
     @Override
     public User getByEmail(String email) {
         log.info("InMemoryUserRepositoryImpl getByEmail {}", email);
-        Optional<User> userOptional = repository.values().stream().filter(user -> user.getEmail().equals(email)).findFirst();
-        return userOptional.get();
+        User userResult = repository.values().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
+        return userResult;
     }
 }

@@ -18,29 +18,35 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        MealsUtil.MEALS.forEach(meal -> save(meal, 1));
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
             return meal;
         }
-        // treat case: update, but absent in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        if (meal.getUserId().equals(userId))
+            return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        else
+            return null;
     }
 
     @Override
-    public boolean delete(int id) {
-        return repository.remove(id) != null;
-    }
-
-    @Override
-    public Meal get(int id) {
+    public boolean delete(int id, int userId) {
         Meal meal = repository.get(id);
-        if (meal.getUserId().equals(SecurityUtil.getAuthUserId()))
+        if (meal.getUserId().equals(userId))
+            return repository.remove(id) != null;
+        else
+            return false;
+    }
+
+    @Override
+    public Meal get(int id, int userId) {
+        Meal meal = repository.get(id);
+        if (meal.getUserId().equals(userId))
             return meal;
         else
             return null;
